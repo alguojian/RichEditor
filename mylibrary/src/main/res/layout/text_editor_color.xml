@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:background="@color/transprent" android:layout_width="wrap_content" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/text_editor_color_popup_bg" android:paddingBottom="10.0dip" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        <ImageView android:id="@id/rl_text_editor_color_1" android:layout_width="38.0dip" android:layout_height="38.0dip" android:layout_marginLeft="12.0dip" android:src="@drawable/text_editor_pop_color_1" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_2" android:layout_width="38.0dip" android:layout_height="38.0dip" android:src="@drawable/text_editor_pop_color_2" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_3" android:layout_width="38.0dip" android:layout_height="38.0dip" android:src="@drawable/text_editor_pop_color_3" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_4" android:layout_width="38.0dip" android:layout_height="38.0dip" android:src="@drawable/text_editor_pop_color_4" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_5" android:layout_width="38.0dip" android:layout_height="38.0dip" android:src="@drawable/text_editor_pop_color_5" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_6" android:layout_width="38.0dip" android:layout_height="38.0dip" android:src="@drawable/text_editor_pop_color_6" android:scaleType="fitXY" />
+        <ImageView android:id="@id/rl_text_editor_color_7" android:layout_width="38.0dip" android:layout_height="38.0dip" android:layout_marginRight="12.0dip" android:src="@drawable/text_editor_pop_color_7" android:scaleType="fitXY" />
+    </LinearLayout>
+</RelativeLayout>

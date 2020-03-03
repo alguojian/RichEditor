@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <HorizontalScrollView
+            android:scrollbars="none"
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#EEEEEE">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/action_bold"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_bold" />
+
+                <ImageView
+                    android:id="@+id/action_italic"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_italic" />
+
+                <ImageView
+                    android:id="@+id/action_underline"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_underline" />
+
+                <ImageView
+                    android:id="@+id/action_font_size"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_size" />
+
+                <ImageView
+                    android:id="@+id/action_font_color"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_color" />
+
+                <ImageView
+                    android:id="@+id/action_font_background_color"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_background_color" />
+
+
+                <ImageView
+                    android:id="@+id/action_img"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:src="@mipmap/font_img"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:text="居中" />
+
+                <TextView
+                    android:id="@+id/right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:text="居右" />
+
+                <TextView
+                    android:id="@+id/order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:text="顺序" />
+
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
+
+        <com.alguojian.richeditor.RichEditor
+            android:id="@+id/editor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom" />
+
+    </RelativeLayout>
+
+</LinearLayout>

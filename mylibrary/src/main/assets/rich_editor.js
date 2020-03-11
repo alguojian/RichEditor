@@ -16,8 +16,6 @@ document.addEventListener("selectionchange", function () {
     const center = document.queryCommandState('justifyCenter');
     const right = document.queryCommandState('justifyRight');
 
-    console.log("----" + left + "-----" + center)
-
     if (left) {
         RE.setJustifyCenter()
         RE.setJustifyLeft()
@@ -34,8 +32,11 @@ document.addEventListener("selectionchange", function () {
 
 // Event Listeners
 RE.editor.addEventListener("input", function () {
+    // console.log("------input-------")
+    // RE.callback();
+    const html = RE.getHtml();
+    window.location.href = "re-callback://" + encodeURI(html);
 
-    RE.callback();
 });
 
 //和上面方法用处相同
@@ -134,7 +135,7 @@ RE.setBold = function (textBold) {
         } else {
             selection.focusNode.parentNode.style.fontWeight = "normal"
         }
-        RE.callback()
+        // RE.callback()
     }
 }
 
@@ -222,8 +223,6 @@ RE.setFontSize = function (fontSize) {
         } else if (fontSize === "5") {
             selection.focusNode.parentNode.style.fontSize = "large"
         }
-        //TODO 暂时不确定要不要调用
-        RE.callback()
     }
 }
 
@@ -320,7 +319,7 @@ RE.setTodo = function (text) {
 RE.backuprange = function () {
     const selection = window.getSelection();
     const rangeCount = selection.rangeCount;
-    console.log("---------选中range个数为-------" + rangeCount)
+    // console.log("---------选中range个数为-------" + rangeCount)
     if (rangeCount > 0) {
         const range = selection.getRangeAt(0);
 

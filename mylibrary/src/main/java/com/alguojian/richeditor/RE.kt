@@ -47,7 +47,7 @@ class RE {
         mEditor.setOnDecorationChangeListener { text, types ->
 
             Log.e("onStateChangeListener", "--------$text")
-            Log.e("onStateChangeListener", "--------$html")
+//            Log.e("onStateChangeListener", "--------$html")
             if (preState == text) {
                 return@setOnDecorationChangeListener
             }

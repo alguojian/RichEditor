@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 
 class RE {
+
     var editor: RichEditor? = null
     var fontColor = Color.BLACK
     var fontBackGroundColor = Color.WHITE
@@ -17,7 +18,7 @@ class RE {
     private var preState = ""
 
     var html: String
-        get() = if (editor!!.html.isNullOrEmpty()  || !editor!!.html.contains("<img") && editor!!.html.startsWith("<") && !editor!!.html.contains("&nbsp")) {
+        get() = if (editor!!.html.isNullOrEmpty()) {
             ""
         } else {
             editor!!.html
@@ -32,33 +33,36 @@ class RE {
             re.init(mEditor)
             return re
         }
+
+        const val TAG = "asdfghgjjgvg"
+
     }
 
     private fun init(mEditor: RichEditor) {
         editor = mEditor
 
         mEditor.setOnDecorationChangeListener { text, types ->
-            Log.e("onStateChangeListener", "------$text")
-            Log.e("onStateChangeListener", "------$html")
-            if (preState == text) {
-                return@setOnDecorationChangeListener
-            }
-            preState = text
-            if (editor!!.canUpdate) {
-                editor?.setTextColor(fontColor)
-                editor?.setTextBackgroundColor(fontBackGroundColor)
-                editor!!.setFontSize(fontSize)
-
-                if (isBold != types.contains(RichEditor.Type.BOLD)) {
-                    editor?.setBold()
-                }
-                if (isItalic != types.contains(RichEditor.Type.ITALIC)) {
-                    editor?.setItalic()
-                }
-                if (isUnderline != types.contains(RichEditor.Type.UNDERLINE)) {
-                    editor?.setUnderline()
-                }
-            }
+            Log.e("onStateChangeListener", "--------$text")
+            Log.e("onStateChangeListener", "--------$html")
+//            if (preState == text) {
+//                return@setOnDecorationChangeListener
+//            }
+//            preState = text
+//            if (editor!!.canUpdate) {
+//                editor?.setTextColor(fontColor)
+//                editor?.setTextBackgroundColor(fontBackGroundColor)
+//                editor!!.setFontSize(fontSize)
+//
+//                if (isBold != types.contains(RichEditor.Type.BOLD)) {
+//                    editor?.setBold()
+//                }
+//                if (isItalic != types.contains(RichEditor.Type.ITALIC)) {
+//                    editor?.setItalic()
+//                }
+//                if (isUnderline != types.contains(RichEditor.Type.UNDERLINE)) {
+//                    editor?.setUnderline()
+//                }
+//            }
 
         }
         mEditor.setOnTextChangeListener { _ ->
@@ -168,6 +172,7 @@ class RE {
      */
     fun reFreshState(delay: Long = 0) {
         editor!!.postDelayed({
+            Log.e(TAG, "刷新最新的状态")
             editor!!.refreshState()
         }, delay)
     }
@@ -180,12 +185,6 @@ class RE {
         editor!!.focusEditor()
     }
 
-    /**
-     * 将编辑框滑动到最后
-     */
-    fun moveToEnd() {
-        editor!!.moveToEnd()
-    }
 
     /**
      * 使用场景一般为要编辑某段富文本的时候,刚进入页面的时候,光标要显示到最后,并且编辑框的内容也要滑动到底部
@@ -196,28 +195,29 @@ class RE {
     fun moveToEndEdit() {
         focus()
         editor!!.postDelayed({
-            val imm = editor!!.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            editor!!.scrollToBottom()
+            val imm =
+                editor!!.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(editor, 0)
-            moveToEnd()
-            reFreshState(300)
-        }, 200)
+//            reFreshState(300)
+        }, 500)
     }
 
 
-    fun setLineHeight( heightInPixel:Int) {
+    fun setLineHeight(heightInPixel: Int) {
         editor!!.setLineHeight(heightInPixel)
     }
 
 
-    fun center(){
+    fun center() {
         editor!!.setAlignCenter()
     }
 
-    fun right(){
+    fun right() {
         editor!!.setAlignRight()
     }
 
-    fun order(){
+    fun order() {
         editor!!.setNumbers()
     }
 }

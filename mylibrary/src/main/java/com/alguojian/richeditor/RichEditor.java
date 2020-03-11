@@ -307,9 +307,6 @@ public class RichEditor extends WebView {
         exec("javascript:RE.setStrikeThrough();");
     }
 
-    public void moveToEnd() {
-        exec("javascript:RE.moveToEnd();");
-    }
 
     public void setUnderline() {
         exec("javascript:RE.setUnderline();");
@@ -409,6 +406,10 @@ public class RichEditor extends WebView {
     public void focusEditor() {
         requestFocus();
         exec("javascript:RE.focus();");
+    }
+
+    public void scrollToBottom() {
+        scrollTo(0, computeVerticalScrollRange());
     }
 
     public void refreshState() {

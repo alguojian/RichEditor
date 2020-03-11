@@ -1,7 +1,5 @@
 const RE = {};
 
-var boldFlag = false
-
 RE.currentSelection = {
     "startContainer": 0,
     "startOffset": 0,
@@ -11,9 +9,24 @@ RE.currentSelection = {
 
 RE.editor = document.getElementById('editor');
 
+//当前文档选择进行了改变
 document.addEventListener("selectionchange", function () {
+     console.log("------当前文档选择进行了改变-------1111")
     RE.backuprange();
 });
+
+// Event Listeners
+RE.editor.addEventListener("input", function(){
+console.log("-------------监听到输入改变事件---------------")
+
+RE.callback();
+});
+
+//和上面方法用处相同
+// document.onselectionchange = function () {
+// console.log("------当前文档选择进行了改变-------2222")
+// }
+
 
 // Initializations
 RE.callback = function (e) {
@@ -91,26 +104,35 @@ RE.redo = function () {
     document.execCommand('redo', false, null);
 }
 
-RE.setBold = function () {
+RE.setBold = function (textBold) {
     const selection = window.getSelection();
     if (window.getSelection().toString()) {
         document.execCommand('bold', false, null)
     } else {
-        // var s = selection.focusNode.parentNode.style;
-        // var s1 = JSON.stringify(s);
-        // console.log("---"+JSON.stringify(s));
-        if (boldFlag) {
-            selection.focusNode.parentNode.style.fontWeight = "normal"
-            boldFlag = false
+        if (textBold) {
+
+        var b = document.createElement('b')
+                b.appendChild(selection.focusNode)
+        RE.editor.appendChild(b)
+//            selection.focusNode.parentNode.style.fontWeight = "bold"
         } else {
-            selection.focusNode.parentNode.style.fontWeight = "bold"
-            boldFlag = true
+            selection.focusNode.parentNode.style.fontWeight = "normal"
         }
     }
 }
 
-RE.setItalic = function () {
-    document.execCommand('italic', false, null);
+RE.setItalic = function (textItalic) {
+    const selection = window.getSelection();
+    if (window.getSelection().toString()) {
+        document.execCommand('italic', false, null);
+    } else {
+        //斜体和去除斜体都可以直接操作本节点，不需要添加   .parentNode
+        if (textItalic) {
+            selection.focusNode.style.fontStyle = "italic"
+        } else {
+            selection.focusNode.style.fontStyle = "normal"
+        }
+    }
 }
 
 RE.setSubscript = function () {
@@ -125,8 +147,17 @@ RE.setStrikeThrough = function () {
     document.execCommand('strikeThrough', false, null);
 }
 
-RE.setUnderline = function () {
-    document.execCommand('underline', false, null);
+RE.setUnderline = function (textUnderline) {
+    const selection = window.getSelection();
+    if (window.getSelection().toString()) {
+        document.execCommand('underline', false, null);
+    } else {
+        if (textUnderline) {
+            selection.focusNode.parentNode.style.textDecoration = "underline"
+        } else {
+            selection.focusNode.parentNode.style.textDecoration = "none"
+        }
+    }
 }
 
 RE.setBullets = function () {
@@ -138,9 +169,15 @@ RE.setNumbers = function () {
 }
 
 RE.setTextColor = function (color) {
+    const selection = window.getSelection();
+    if (window.getSelection().toString()) {
+        document.execCommand('foreColor', false, color);
+    } else {
+        selection.focusNode.parentNode.style.color = color
+    }
+
 //    RE.restorerange();
 //    document.execCommand("styleWithCSS", null, true);
-    document.execCommand('foreColor', false, color);
 //    document.execCommand("styleWithCSS", null, false);
 }
 
@@ -153,9 +190,19 @@ RE.setTextBackgroundColor = function (color) {
 }
 
 RE.setFontSize = function (fontSize) {
-    document.execCommand("fontSize", false, fontSize);
+    const selection = window.getSelection();
+    if (window.getSelection().toString()) {
+        document.execCommand("fontSize", false, fontSize);
+    } else {
+        if (fontSize === "3") {
+            selection.focusNode.parentNode.style.fontSize = "small"
+        } else if (fontSize === "4") {
+            selection.focusNode.parentNode.style.fontSize = "medium"
+        } else if (fontSize === "5") {
+            selection.focusNode.parentNode.style.fontSize = "large"
+        }
+    }
 }
-
 
 RE.setLineHeight = function (heightInPixel) {
 // 设置单行行高
@@ -218,6 +265,7 @@ RE.insertHTML = function (html) {
 RE.insertText = function (text) {
     document.execCommand('insertText', false, text);
 }
+
 RE.deleteOneWord = function () {
     document.execCommand('delete', false, "1");
 }
@@ -225,15 +273,15 @@ RE.deleteOneWord = function () {
 
 RE.insertLink = function (url, title) {
     RE.restorerange();
-    var sel = document.getSelection();
+    const sel = document.getSelection();
     if (sel.toString().length == 0) {
         document.execCommand("insertHTML", false, "<a href='" + url + "'>" + title + "</a>");
     } else if (sel.rangeCount) {
-        var el = document.createElement("a");
+        const el = document.createElement("a");
         el.setAttribute("href", url);
         el.setAttribute("title", title);
 
-        var range = sel.getRangeAt(0).cloneRange();
+        const range = sel.getRangeAt(0).cloneRange();
         range.surroundContents(el);
         sel.removeAllRanges();
         sel.addRange(range);
@@ -242,18 +290,20 @@ RE.insertLink = function (url, title) {
 }
 
 RE.setTodo = function (text) {
-    var html = '<input type="checkbox" name="' + text + '" value="' + text + '"/> &nbsp;';
+    const html = '<input type="checkbox" name="' + text + '" value="' + text + '"/> &nbsp;';
     document.execCommand('insertHTML', false, html);
 }
 
-RE.prepareInsert = function () {
-    RE.backuprange();
-}
+// RE.prepareInsert = function () {
+//     RE.backuprange();
+// }
 
 RE.backuprange = function () {
-    var selection = window.getSelection();
-    if (selection.rangeCount > 0) {
-        var range = selection.getRangeAt(0);
+    const selection = window.getSelection();
+    const rangeCount = selection.rangeCount;
+    console.log("---------选中的了range--个数为---" + rangeCount)
+    if (rangeCount > 0) {
+        const range = selection.getRangeAt(0);
         RE.currentSelection = {
             "startContainer": range.startContainer,
             "startOffset": range.startOffset,
@@ -282,7 +332,7 @@ RE.queryCommandState = function (command) {
 }
 
 RE.enabledEditingItems = function (e) {
-    var items = [];
+    const items = [];
     if (document.queryCommandState('bold')) {
         items.push('bold');
     }
@@ -350,18 +400,20 @@ RE.removeFormat = function () {
     document.execCommand('removeFormat', false, null);
 }
 
-// Event Listeners
-RE.editor.addEventListener("input", RE.callback);
+
 RE.editor.addEventListener("keyup", function (e) {
     var KEY_LEFT = 37, KEY_RIGHT = 39;
     if (e.which == KEY_LEFT || e.which == KEY_RIGHT) {
+        console.log("-------------------------------------------")
         RE.enabledEditingItems(e);
     }
 });
 
-//document.onselectionchange =  RE.enabledEditingItems;
 
-RE.editor.addEventListener("click", RE.enabledEditingItems);
+RE.editor.addEventListener("click", function () {
+console.log("-------------监听到点击事件---------------")
+    RE.enabledEditingItems();
+});
 
 
 // 获取文字颜色和大小
@@ -374,22 +426,14 @@ function getComputedStyleProperty(el, propName) {
 }
 
 
-function isSelected() {
-    if (window.getSelection) {
-        alert("ad");
-        return window.getSelection();
-
-    }
-}
-
-
 function reportColourAndFontSize(items) {
-    var containerEl, sel;
+    let containerEl, sel;
     if (window.getSelection) {
         sel = window.getSelection();
         if (sel.rangeCount) {
             containerEl = sel.getRangeAt(0).commonAncestorContainer;
-            // Make sure we have an element rather than a text node
+            // https://www.w3school.com.cn/jsref/prop_node_nodetype.asp
+            //3代表是一个文本节点
             if (containerEl.nodeType == 3) {
                 containerEl = containerEl.parentNode;
             }
@@ -400,8 +444,9 @@ function reportColourAndFontSize(items) {
 
     if (containerEl) {
         var fontSize = containerEl.size;
+        console.log("----"+fontSize)
         if (!fontSize) {
-            fontSize = 3;
+            fontSize = 4;
         }
         var color = getComputedStyleProperty(containerEl, "color");
         var backgroundColor = getComputedStyleProperty(containerEl, "background-color");
@@ -420,11 +465,3 @@ function colorRGB2Hex(color) {
     var hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     return hex;
 }
-
-// 将页面滑动到最底端
-RE.moveToEnd = function () {
-    setTimeout(function () {
-        document.getElementById('editor_end').scrollIntoView();
-    }, 200)
-}
-

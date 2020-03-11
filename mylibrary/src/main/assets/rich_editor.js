@@ -11,15 +11,31 @@ RE.editor = document.getElementById('editor');
 
 //当前文档选择进行了改变
 document.addEventListener("selectionchange", function () {
-     console.log("------当前文档选择进行了改变-------1111")
+
+    const left = document.queryCommandState('justifyLeft');
+    const center = document.queryCommandState('justifyCenter');
+    const right = document.queryCommandState('justifyRight');
+
+    console.log("----" + left + "-----" + center)
+
+    if (left) {
+        RE.setJustifyCenter()
+        RE.setJustifyLeft()
+    } else if (center) {
+        RE.setJustifyLeft()
+        RE.setJustifyCenter()
+    } else {
+        RE.setJustifyCenter()
+        RE.setJustifyRight()
+    }
+
     RE.backuprange();
 });
 
 // Event Listeners
-RE.editor.addEventListener("input", function(){
-console.log("-------------监听到输入改变事件---------------")
+RE.editor.addEventListener("input", function () {
 
-RE.callback();
+    RE.callback();
 });
 
 //和上面方法用处相同
@@ -30,7 +46,9 @@ RE.callback();
 
 // Initializations
 RE.callback = function (e) {
-    window.location.href = "re-callback://" + encodeURI(RE.getHtml());
+    const html = RE.getHtml();
+    window.location.href = "re-callback://" + encodeURI(html);
+
     setTimeout(function () {
         RE.enabledEditingItems(e);
     }, 50)
@@ -109,15 +127,14 @@ RE.setBold = function (textBold) {
     if (window.getSelection().toString()) {
         document.execCommand('bold', false, null)
     } else {
-        if (textBold) {
 
-        var b = document.createElement('b')
-                b.appendChild(selection.focusNode)
-        RE.editor.appendChild(b)
-//            selection.focusNode.parentNode.style.fontWeight = "bold"
+
+        if (textBold) {
+            selection.focusNode.parentNode.style.fontWeight = "bold"
         } else {
             selection.focusNode.parentNode.style.fontWeight = "normal"
         }
+        RE.callback()
     }
 }
 
@@ -126,12 +143,12 @@ RE.setItalic = function (textItalic) {
     if (window.getSelection().toString()) {
         document.execCommand('italic', false, null);
     } else {
-        //斜体和去除斜体都可以直接操作本节点，不需要添加   .parentNode
         if (textItalic) {
-            selection.focusNode.style.fontStyle = "italic"
+            selection.focusNode.parentNode.style.fontStyle = "italic"
         } else {
-            selection.focusNode.style.fontStyle = "normal"
+            selection.focusNode.parentNode.style.fontStyle = "normal"
         }
+        RE.callback()
     }
 }
 
@@ -157,6 +174,8 @@ RE.setUnderline = function (textUnderline) {
         } else {
             selection.focusNode.parentNode.style.textDecoration = "none"
         }
+
+        RE.callback()
     }
 }
 
@@ -174,6 +193,8 @@ RE.setTextColor = function (color) {
         document.execCommand('foreColor', false, color);
     } else {
         selection.focusNode.parentNode.style.color = color
+        RE.callback()
+
     }
 
 //    RE.restorerange();
@@ -201,6 +222,8 @@ RE.setFontSize = function (fontSize) {
         } else if (fontSize === "5") {
             selection.focusNode.parentNode.style.fontSize = "large"
         }
+        //TODO 暂时不确定要不要调用
+        RE.callback()
     }
 }
 
@@ -294,33 +317,36 @@ RE.setTodo = function (text) {
     document.execCommand('insertHTML', false, html);
 }
 
-// RE.prepareInsert = function () {
-//     RE.backuprange();
-// }
-
 RE.backuprange = function () {
     const selection = window.getSelection();
     const rangeCount = selection.rangeCount;
-    console.log("---------选中的了range--个数为---" + rangeCount)
+    console.log("---------选中range个数为-------" + rangeCount)
     if (rangeCount > 0) {
         const range = selection.getRangeAt(0);
+
+        const startContainer = range.startContainer;
+        const startOffset = range.startOffset;
+        const endContainer = range.endContainer;
+        const endOffset = range.endOffset;
+
         RE.currentSelection = {
-            "startContainer": range.startContainer,
-            "startOffset": range.startOffset,
-            "endContainer": range.endContainer,
-            "endOffset": range.endOffset
+            "startContainer": startContainer,
+            "startOffset": startOffset,
+            "endContainer": endContainer,
+            "endOffset": endOffset
         };
     }
 }
 
 RE.restorerange = function () {
-    var selection = window.getSelection();
+    const selection = window.getSelection();
     selection.removeAllRanges();
-    var range = document.createRange();
+    const range = document.createRange();
     range.setStart(RE.currentSelection.startContainer, RE.currentSelection.startOffset);
     range.setEnd(RE.currentSelection.endContainer, RE.currentSelection.endOffset);
     selection.addRange(range);
 }
+
 
 RE.queryCommandState = function (command) {
     var items = [];
@@ -411,7 +437,7 @@ RE.editor.addEventListener("keyup", function (e) {
 
 
 RE.editor.addEventListener("click", function () {
-console.log("-------------监听到点击事件---------------")
+    console.log("-------------监听到点击事件---------------")
     RE.enabledEditingItems();
 });
 
@@ -444,7 +470,7 @@ function reportColourAndFontSize(items) {
 
     if (containerEl) {
         var fontSize = containerEl.size;
-        console.log("----"+fontSize)
+        console.log("----" + fontSize)
         if (!fontSize) {
             fontSize = 4;
         }

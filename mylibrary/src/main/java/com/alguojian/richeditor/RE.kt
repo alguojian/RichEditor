@@ -41,16 +41,21 @@ class RE {
     private fun init(mEditor: RichEditor) {
         editor = mEditor
 
+        mEditor.setEditorFontColor(Color.BLACK)
+        mEditor.setEditorFontSize(16)
+
         mEditor.setOnDecorationChangeListener { text, types ->
+
             Log.e("onStateChangeListener", "--------$text")
             Log.e("onStateChangeListener", "--------$html")
-//            if (preState == text) {
-//                return@setOnDecorationChangeListener
-//            }
-//            preState = text
+            if (preState == text) {
+                return@setOnDecorationChangeListener
+            }
+            preState = text
+            editor?.setTextBackgroundColor(fontBackGroundColor)
+
 //            if (editor!!.canUpdate) {
 //                editor?.setTextColor(fontColor)
-//                editor?.setTextBackgroundColor(fontBackGroundColor)
 //                editor!!.setFontSize(fontSize)
 //
 //                if (isBold != types.contains(RichEditor.Type.BOLD)) {
@@ -87,7 +92,7 @@ class RE {
      */
     fun setBold() {
         isBold = !isBold
-        editor!!.setBold()
+        editor!!.setBold(isBold)
     }
 
     /**
@@ -95,7 +100,7 @@ class RE {
      */
     fun setItalic() {
         isItalic = !isItalic
-        editor!!.setItalic()
+        editor!!.setItalic(isItalic)
     }
 
     /**
@@ -162,7 +167,7 @@ class RE {
      */
     fun setUnderLine() {
         isUnderline = !isUnderline
-        editor!!.setUnderline()
+        editor!!.setUnderline(isUnderline)
     }
 
     /**

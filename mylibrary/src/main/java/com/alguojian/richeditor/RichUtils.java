@@ -9,16 +9,16 @@ import android.graphics.drawable.Drawable;
 import android.util.Base64;
 import java.io.ByteArrayOutputStream;
 
-public final class Utils {
+public final class RichUtils {
 
-  private Utils() throws InstantiationException {
-    throw new InstantiationException("This class is not for instantiation");
-  }
+    private RichUtils() throws InstantiationException {
+        throw new InstantiationException("This class is not for instantiation");
+    }
 
-  public static String toBase64(Bitmap bitmap) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-    byte[] bytes = baos.toByteArray();
+    public static String toBase64(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] bytes = baos.toByteArray();
 
     return Base64.encodeToString(bytes, Base64.NO_WRAP);
   }

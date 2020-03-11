@@ -24,4 +24,4 @@ body {
 #editor[placeholder]:empty:not(:focus):before {
   content: attr(placeholder);
   opacity: .5;
-}}
+}

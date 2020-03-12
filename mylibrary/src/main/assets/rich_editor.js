@@ -415,14 +415,12 @@ RE.removeFormat = function () {
 RE.editor.addEventListener("keyup", function (e) {
     var KEY_LEFT = 37, KEY_RIGHT = 39;
     if (e.which == KEY_LEFT || e.which == KEY_RIGHT) {
-        console.log("-------------------------------------------")
         RE.enabledEditingItems(e);
     }
 });
 
 
 RE.editor.addEventListener("click", function () {
-    console.log("-------------监听到点击事件---------------")
     RE.enabledEditingItems();
 });
 

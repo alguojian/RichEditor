@@ -32,18 +32,10 @@ document.addEventListener("selectionchange", function () {
 
 // Event Listeners
 RE.editor.addEventListener("input", function () {
-    // console.log("------input-------")
-    // RE.callback();
     const html = RE.getHtml();
     window.location.href = "re-callback://" + encodeURI(html);
 
 });
-
-//和上面方法用处相同
-// document.onselectionchange = function () {
-// console.log("------当前文档选择进行了改变-------2222")
-// }
-
 
 // Initializations
 RE.callback = function (e) {
@@ -129,13 +121,12 @@ RE.setBold = function (textBold) {
         document.execCommand('bold', false, null)
     } else {
 
-
         if (textBold) {
             selection.focusNode.parentNode.style.fontWeight = "bold"
         } else {
             selection.focusNode.parentNode.style.fontWeight = "normal"
         }
-        // RE.callback()
+        RE.callback()
     }
 }
 
@@ -195,12 +186,7 @@ RE.setTextColor = function (color) {
     } else {
         selection.focusNode.parentNode.style.color = color
         RE.callback()
-
     }
-
-//    RE.restorerange();
-//    document.execCommand("styleWithCSS", null, true);
-//    document.execCommand("styleWithCSS", null, false);
 }
 
 
@@ -217,12 +203,13 @@ RE.setFontSize = function (fontSize) {
         document.execCommand("fontSize", false, fontSize);
     } else {
         if (fontSize === "3") {
-            selection.focusNode.parentNode.style.fontSize = "small"
-        } else if (fontSize === "4") {
             selection.focusNode.parentNode.style.fontSize = "medium"
-        } else if (fontSize === "5") {
+        } else if (fontSize === "4") {
             selection.focusNode.parentNode.style.fontSize = "large"
+        } else if (fontSize === "5") {
+            selection.focusNode.parentNode.style.fontSize = "x-large"
         }
+        RE.callback()
     }
 }
 
@@ -319,7 +306,6 @@ RE.setTodo = function (text) {
 RE.backuprange = function () {
     const selection = window.getSelection();
     const rangeCount = selection.rangeCount;
-    // console.log("---------选中range个数为-------" + rangeCount)
     if (rangeCount > 0) {
         const range = selection.getRangeAt(0);
 

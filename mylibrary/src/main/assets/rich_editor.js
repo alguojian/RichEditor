@@ -33,7 +33,6 @@ document.addEventListener("selectionchange", function () {
 RE.editor.addEventListener("input", function () {
     const html = RE.getHtml();
     window.location.href = "re-callback://" + encodeURI(html);
-
 });
 
 // Initializations

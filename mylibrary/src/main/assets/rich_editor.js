@@ -14,7 +14,6 @@ document.addEventListener("selectionchange", function () {
 
     const left = document.queryCommandState('justifyLeft');
     const center = document.queryCommandState('justifyCenter');
-    const right = document.queryCommandState('justifyRight');
 
     if (left) {
         RE.setJustifyCenter()

@@ -118,7 +118,6 @@ RE.setBold = function (textBold) {
     if (window.getSelection().toString()) {
         document.execCommand('bold', false, null)
     } else {
-
         if (textBold) {
             selection.focusNode.parentNode.style.fontWeight = "bold"
         } else {
@@ -164,7 +163,6 @@ RE.setUnderline = function (textUnderline) {
         } else {
             selection.focusNode.parentNode.style.textDecoration = "none"
         }
-
         RE.callback()
     }
 }
@@ -341,7 +339,6 @@ RE.queryCommandState = function (command) {
 }
 
 RE.enabledEditingItems = function (e) {
-
     const items = {
         bold: false,
         italic: false,

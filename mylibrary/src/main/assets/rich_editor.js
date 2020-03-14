@@ -341,53 +341,76 @@ RE.queryCommandState = function (command) {
 }
 
 RE.enabledEditingItems = function (e) {
-    const items = [];
+
+    const items = {
+        bold: false,
+        italic: false,
+        subscript: false,
+        superscript: false,
+        strikeThrough: false,
+        underline: false,
+        orderedList: false,
+        unorderedList: false,
+        horizontalRule: false,
+        justifyFull: false,
+        formatBlock: null,
+        align: 0,
+        textSize: 4,
+        textColors: "",
+        textBgColor: ""
+    };
+
+    // {
+    //     Boolean bold;
+    //     Boolean it
+
+    // }
+
     if (document.queryCommandState('bold')) {
-        items.push('bold');
+        items.bold = true
     }
     if (document.queryCommandState('italic')) {
-        items.push('italic');
+        items.italic = true
     }
     if (document.queryCommandState('subscript')) {
-        items.push('subscript');
+        items.subscript = true
     }
     if (document.queryCommandState('superscript')) {
-        items.push('superscript');
+        items.superscript = true
     }
     if (document.queryCommandState('strikeThrough')) {
-        items.push('strikeThrough');
+        items.strikeThrough = true
     }
     if (document.queryCommandState('underline')) {
-        items.push('underline');
+        items.underline = true
     }
     if (document.queryCommandState('insertOrderedList')) {
-        items.push('orderedList');
+        items.orderedList = true
     }
     if (document.queryCommandState('insertUnorderedList')) {
-        items.push('unorderedList');
+        items.unorderedList = true
     }
     if (document.queryCommandState('justifyCenter')) {
-        items.push('justifyCenter');
+        items.align = 1
     }
     if (document.queryCommandState('justifyFull')) {
-        items.push('justifyFull');
+        items.justifyFull = true
     }
     if (document.queryCommandState('justifyLeft')) {
-        items.push('justifyLeft');
+        items.align = 0
     }
     if (document.queryCommandState('justifyRight')) {
-        items.push('justifyRight');
+        items.align = 2
     }
     if (document.queryCommandState('insertHorizontalRule')) {
-        items.push('horizontalRule');
+        items.horizontalRule = true
     }
     const formatBlock = document.queryCommandValue('formatBlock');
     if (formatBlock.length > 0) {
-        items.push(formatBlock);
+        items.formatBlock = formatBlock
     }
     reportColourAndFontSize(items);
-
-    window.location.href = "re-state://" + encodeURI(items.join(','));
+    window.location.href = "re-state://" + encodeURI(JSON.stringify(items));
 }
 
 RE.focus = function () {
@@ -438,27 +461,27 @@ function reportColourAndFontSize(items) {
         sel = window.getSelection();
         if (sel.rangeCount) {
             containerEl = sel.getRangeAt(0).commonAncestorContainer;
-            // https://www.w3school.com.cn/jsref/prop_node_nodetype.asp
             //3代表是一个文本节点
-            if (containerEl.nodeType == 3) {
+            if (containerEl.nodeType === 3) {
                 containerEl = containerEl.parentNode;
             }
         }
-    } else if ((sel = document.selection) && sel.type != "Control") {
+    } else if ((sel = document.selection) && sel.type !== "Control") {
         containerEl = sel.createRange().parentElement();
     }
 
     if (containerEl) {
         var fontSize = containerEl.size;
-        console.log("----" + fontSize)
         if (!fontSize) {
             fontSize = 4;
         }
-        var color = getComputedStyleProperty(containerEl, "color");
-        var backgroundColor = getComputedStyleProperty(containerEl, "background-color");
-        items.push("textColor:" + colorRGB2Hex(color));
-        items.push("textBgColor:" + colorRGB2Hex(backgroundColor));
-        items.push(fontSize + "pt");
+        const color = getComputedStyleProperty(containerEl, "color");
+        const backgroundColor = getComputedStyleProperty(containerEl, "background-color");
+        const colorString = colorRGB2Hex(color);
+        const backgroundColorString = colorRGB2Hex(backgroundColor);
+        items.textColors = colorString;
+        items.textBgColor = backgroundColorString;
+        items.textSize = fontSize;
     }
 }
 

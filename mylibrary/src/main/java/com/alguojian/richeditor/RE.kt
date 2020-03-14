@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Color
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
+import org.json.JSONObject
 
 class RE {
 
@@ -41,39 +42,27 @@ class RE {
     private fun init(mEditor: RichEditor) {
         editor = mEditor
 
-        mEditor.setEditorFontColor(Color.BLACK)
-        mEditor.setEditorFontSize(16)
+        mEditor.setEditorFontColor(Color.BLUE)
+        mEditor.setTextColor(Color.BLUE)
+        mEditor.setEditorBackgroundColor(Color.WHITE)
+//        mEditor.setEditorFontSize(16)
 
         mEditor.setOnDecorationChangeListener(object : RichEditor.OnDecorationStateListener {
-            override fun onStateChangeListener(text: String, types: List<RichEditor.Type>) {
+            override fun onStateChangeListener(text: String) {
 
                 Log.e("onStateChangeListener", "--------$text")
-//            Log.e("onStateChangeListener", "--------$html")
-                if (preState == text) {
-                    return
-                }
-                preState = text
-                editor?.setTextBackgroundColor(fontBackGroundColor)
+                val jsonObject = JSONObject(text)
+                val optBoolean = jsonObject.optBoolean("bold")
+                val underLine = jsonObject.optBoolean("underline")
+                val textColors = jsonObject.optString("textColors")
+                val textBgColor = jsonObject.optString("textBgColor")
 
-//            if (editor!!.canUpdate) {
-//                editor?.setTextColor(fontColor)
-//                editor!!.setFontSize(fontSize)
-//
-//                if (isBold != types.contains(RichEditor.Type.BOLD)) {
-//                    editor?.setBold()
-//                }
-//                if (isItalic != types.contains(RichEditor.Type.ITALIC)) {
-//                    editor?.setItalic()
-//                }
-//                if (isUnderline != types.contains(RichEditor.Type.UNDERLINE)) {
-//                    editor?.setUnderline()
-//                }
-//            }
+                println("$optBoolean---$underLine")
             }
         })
         mEditor.setOnTextChangeListener(object : RichEditor.OnTextChangeListener {
             override fun onTextChange(text: String) {
-                isFocus = true// 文本改动过,说明肯定获取到了焦点
+                isFocus = true
             }
         })
     }

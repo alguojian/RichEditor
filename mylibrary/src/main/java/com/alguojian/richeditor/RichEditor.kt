@@ -30,9 +30,6 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
     attrs: AttributeSet?,
     defStyleAttr: Int
 ) : WebView(context, attrs, defStyleAttr) {
-    enum class Type {
-        BOLD, ITALIC, SUBSCRIPT, SUPERSCRIPT, STRIKETHROUGH, UNDERLINE, H1, H2, H3, H4, H5, H6, ORDEREDLIST, UNORDEREDLIST, JUSTIFYCENTER, JUSTIFYFULL, JUSTIFYLEFT, JUSTIFYRIGHT
-    }
 
     interface OnTextChangeListener {
         fun onTextChange(text: String)
@@ -44,8 +41,7 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
 
     interface OnDecorationStateListener {
         fun onStateChangeListener(
-            text: String,
-            types: List<Type>
+            text: String
         )
     }
 
@@ -103,15 +99,9 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     private fun stateCheck(text: String) {
-        val state = text.replaceFirst(STATE_SCHEME.toRegex(), "").toUpperCase(Locale.ENGLISH)
-        val types: MutableList<Type> = ArrayList()
-        for (type in Type.values()) {
-            if (TextUtils.indexOf(state, type.name) != -1) {
-                types.add(type)
-            }
-        }
+        val state = text.replaceFirst(STATE_SCHEME.toRegex(), "")
         if (mDecorationStateListener != null) {
-            mDecorationStateListener!!.onStateChangeListener(state, types)
+            mDecorationStateListener!!.onStateChangeListener(state)
         }
     }
 

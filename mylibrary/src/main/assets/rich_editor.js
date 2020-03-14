@@ -381,21 +381,20 @@ RE.enabledEditingItems = function (e) {
     if (document.queryCommandState('insertHorizontalRule')) {
         items.push('horizontalRule');
     }
-    var formatBlock = document.queryCommandValue('formatBlock');
+    const formatBlock = document.queryCommandValue('formatBlock');
     if (formatBlock.length > 0) {
         items.push(formatBlock);
     }
-
     reportColourAndFontSize(items);
 
     window.location.href = "re-state://" + encodeURI(items.join(','));
 }
 
 RE.focus = function () {
-    var range = document.createRange();
+    const range = document.createRange();
     range.selectNodeContents(RE.editor);
     range.collapse(false);
-    var selection = window.getSelection();
+    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
     RE.editor.focus();

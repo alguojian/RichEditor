@@ -21,7 +21,7 @@ class RE {
         get() = if (editor!!.html.isNullOrEmpty()) {
             ""
         } else {
-            editor!!.html
+            editor!!.html!!
         }
         set(value) {
             editor!!.html = value
@@ -44,15 +44,16 @@ class RE {
         mEditor.setEditorFontColor(Color.BLACK)
         mEditor.setEditorFontSize(16)
 
-        mEditor.setOnDecorationChangeListener { text, types ->
+        mEditor.setOnDecorationChangeListener(object : RichEditor.OnDecorationStateListener {
+            override fun onStateChangeListener(text: String, types: List<RichEditor.Type>) {
 
-            Log.e("onStateChangeListener", "--------$text")
+                Log.e("onStateChangeListener", "--------$text")
 //            Log.e("onStateChangeListener", "--------$html")
-            if (preState == text) {
-                return@setOnDecorationChangeListener
-            }
-            preState = text
-            editor?.setTextBackgroundColor(fontBackGroundColor)
+                if (preState == text) {
+                    return
+                }
+                preState = text
+                editor?.setTextBackgroundColor(fontBackGroundColor)
 
 //            if (editor!!.canUpdate) {
 //                editor?.setTextColor(fontColor)
@@ -68,11 +69,13 @@ class RE {
 //                    editor?.setUnderline()
 //                }
 //            }
-
-        }
-        mEditor.setOnTextChangeListener { _ ->
-            isFocus = true// 文本改动过,说明肯定获取到了焦点
-        }
+            }
+        })
+        mEditor.setOnTextChangeListener(object : RichEditor.OnTextChangeListener {
+            override fun onTextChange(text: String) {
+                isFocus = true// 文本改动过,说明肯定获取到了焦点
+            }
+        })
     }
 
 

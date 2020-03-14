@@ -18,6 +18,8 @@ import com.alguojian.richeditor.RichUtils.currentTime
 import com.alguojian.richeditor.RichUtils.decodeResource
 import com.alguojian.richeditor.RichUtils.toBase64
 import com.alguojian.richeditor.RichUtils.toBitmap
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -33,13 +35,17 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     interface OnTextChangeListener {
-        fun onTextChange(text: String?)
+        fun onTextChange(text: String)
+    }
+
+    interface OnTextContentListener {
+        fun onContent(content: String)
     }
 
     interface OnDecorationStateListener {
         fun onStateChangeListener(
-            text: String?,
-            types: List<Type>?
+            text: String,
+            types: List<Type>
         )
     }
 
@@ -48,9 +54,10 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
     }
 
     private var isReady = false
-    private var mContents: String? = null
+    private var mContents: String = ""
     private var mMaxHeight = -1
     private var mTextChangeListener: OnTextChangeListener? = null
+    private var onTextContentListener: OnTextContentListener? = null
     private var mDecorationStateListener: OnDecorationStateListener? = null
     private var mLoadListener: AfterInitialLoadListener? = null
 
@@ -69,7 +76,11 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
         mTextChangeListener = listener
     }
 
-    fun setOnDecorationChangeListener(listener: OnDecorationStateListener?) {
+    fun setOnTextContentListener(listener: OnTextContentListener) {
+        onTextContentListener = listener
+    }
+
+    fun setOnDecorationChangeListener(listener: OnDecorationStateListener) {
         mDecorationStateListener = listener
     }
 
@@ -86,13 +97,14 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
         if (mTextChangeListener != null) {
             mTextChangeListener!!.onTextChange(mContents)
         }
+        if (onTextContentListener != null) {
+            onTextContentListener!!.onContent(getText())
+        }
     }
 
     private fun stateCheck(text: String) {
-        val state =
-            text.replaceFirst(STATE_SCHEME.toRegex(), "").toUpperCase(Locale.ENGLISH)
-        val types: MutableList<Type> =
-            ArrayList()
+        val state = text.replaceFirst(STATE_SCHEME.toRegex(), "").toUpperCase(Locale.ENGLISH)
+        val types: MutableList<Type> = ArrayList()
         for (type in Type.values()) {
             if (TextUtils.indexOf(state, type.name) != -1) {
                 types.add(type)
@@ -221,13 +233,14 @@ class RichEditor @SuppressLint("SetJavaScriptEnabled") constructor(
         exec("javascript:$jsCSSImport")
     }
 
-    //    public String getText() {
-    //        if (!TextUtils.isEmpty(getHtml())) {
-    //            Document doc = Jsoup.parse(getHtml());
-    //            return doc.body().text();
-    //        }
-    //        return "";
-    //    }
+    private fun getText(): String {
+        if (!html.isNullOrEmpty()) {
+            val doc = Jsoup.parse(html);
+            return doc.body().text();
+        }
+        return "";
+    }
+
     fun queryCommandState(command: String) {
         exec("javascript:RE.queryCommandState('$command');")
     }
